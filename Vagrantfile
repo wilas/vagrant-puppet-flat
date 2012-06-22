@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant::Config.run do |config|
-  vm_name= "farmhouse_simple"
+  vm_name= "farmhouse_flat"
   
   config.vm.box = "SL64_box"
   config.vm.host_name = "#{vm_name}.farm"
