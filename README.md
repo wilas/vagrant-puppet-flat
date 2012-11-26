@@ -3,7 +3,7 @@
 
 ## Learned lessons
 
- - prepare own vagrant box: scientific linux 6.2 x86_64 (now [veewee-SL64-box](https://github.com/wilas/veewee-SL64-box)
+ - prepare own vagrant box: scientific linux 6.2 x86_64 (now [veewee-SL64-box](https://github.com/wilas/veewee-SL64-box))
  - simple Vagrantfile with puppet provisioning, share folder
  - use stage in puppet manifest
  - manage yum repos (tags, resource collecions )
@@ -21,6 +21,7 @@
     ssh root@localhost -p 2222
     vagrant destroy
 ```
+
 
 ## Bibliography
 
