@@ -1,5 +1,9 @@
 # Single file puppet manifest and vagrant
 
+## VM description
+
+ - OS: Scientific linux 6
+ - simple vm: farmhouse_flat.farm
 
 ## Learned lessons
 
