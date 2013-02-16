@@ -7,7 +7,7 @@
 
 ## Learned lessons
 
- - prepare own vagrant box: scientific linux 6.2 x86_64 (now [veewee-SL64-box](https://github.com/wilas/veewee-SL64-box))
+ - prepare own vagrant box: scientific linux 6 x86_64 (now [veewee-SL6-box](https://github.com/wilas/veewee-vagrant-SL6-x86_64))
  - simple Vagrantfile with puppet provisioning, share folder
  - use stage in puppet manifest
  - manage yum repos (tags, resource collecions )
@@ -17,7 +17,7 @@
 
 ## Howto
 
- - create SL64_box using [veewee-SL64-box](https://github.com/wilas/veewee-SL64-box)
+ - create SL64_box using [veewee-SL6-box](https://github.com/wilas/veewee-vagrant-SL6-x86_64)
  - copy ssh_keys from [ssh-gerwazy](https://github.com/wilas/ssh-gerwazy)
 
 ```
@@ -32,17 +32,25 @@
 ### Puppet
 
  - !!! learning puppet: http://docs.puppetlabs.com/learning/index.html
- - !!! puppet resource type: http://docs.puppetlabs.com/references/2.7.6/type.html
+ - !!! puppet resource type: http://docs.puppetlabs.com/references/3.1.latest/type.html
  - puppet styl guide: http://docs.puppetlabs.com/guides/style_guide.html
- - puppet language guide: http://docs.puppetlabs.com/puppet/2.7/reference/lang_summary.html
+ - puppet language guide: http://docs.puppetlabs.com/puppet/3/reference/lang_summary.html
  - puppet custom types: http://docs.puppetlabs.com/guides/custom_types.html
- - best practice: http://projects.puppetlabs.com/projects/puppet/wiki/Puppet_Best_Practice2
- - !!! puppet cookbook: http://puppetcookbook.com/
- - !!! vim + puppet: https://github.com/puppetlabs/puppet/tree/master/ext/vim
- - !!! geppetto + eclipse: http://puppetlabs.com/blog/geppetto-a-puppet-ide/
+ - puppet best practice: http://projects.puppetlabs.com/projects/puppet/wiki/Puppet_Best_Practice2
  - puppet open-source: http://puppetlabs.com/puppet/puppet-open-source/
  - puppet forge: http://forge.puppetlabs.com/
- - !! more links here: http://blog.andreas-haerter.com/2012/02/05/how-to-start-puppet-system-config-links-resources-tutorials
+ - puppet hiera: http://docs.puppetlabs.com/hiera/1/index.html
+ - puppet using hiera: https://puppetlabs.com/blog/first-look-installing-and-using-hiera/
+ - puppet3: http://docs.puppetlabs.com/puppet/3/reference/index.html
+ - !!! puppet cookbook: http://puppetcookbook.com/
+ - !! more links: http://blog.andreas-haerter.com/2012/02/05/how-to-start-puppet-system-config-links-resources-tutorials
+ - community: http://docs.puppetlabs.com/community/community_guidelines.html
+
+### Puppet IDE
+
+ - !!! vim + puppet: https://github.com/puppetlabs/puppet/tree/master/ext/vim
+ - !!! geppetto + eclipse: http://puppetlabs.com/blog/geppetto-a-puppet-ide/
+ - geppetto project: http://cloudsmith.github.com/geppetto/index.html
 
 ### Vagrant
 

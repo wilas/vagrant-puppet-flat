@@ -52,17 +52,21 @@ class install_repos {
     }
 
     yumrepo { 
-        "puppetlabs":
-            enabled        => 1,
-            descr          => 'Puppet Labs Packages',
-            baseurl        => 'http://yum.puppetlabs.com/el/6/products/x86_64/',
-            gpgcheck       => 0;
-
-        "puppetlabs2":
-            enabled        => 1,
-            descr          => 'Puppet Labs Packages Deps',
-            baseurl        => 'http://yum.puppetlabs.com/el/6/dependencies/x86_64/',
-            gpgcheck       => 0;
+        "puppetlabs-products":
+            enabled  => 1,
+            descr    => 'Puppet Labs Products EL 6 - $basearch',
+            baseurl  => 'http://yum.puppetlabs.com/el/6/products/$basearch',
+            gpgcheck => 0; 
+        "puppetlabs-deps":
+            enabled  => 1,
+            descr    => 'Puppet Labs Dependencies EL 6 - $basearch',
+            baseurl  => 'http://yum.puppetlabs.com/el/6/dependencies/$basearch',
+            gpgcheck => 0;  
+        "puppetlabs-devel":
+            enabled  => 0,
+            descr    => 'Puppet Labs Devel EL 6 - $basearch',
+            baseurl  => 'http://yum.puppetlabs.com/el/6/dependencies/$basearch',
+            gpgcheck => 0;
     }
 }
 
@@ -168,6 +172,7 @@ class user::virtual {
 
         if $ensure == "present" and $attune {
             # make $name of user_attune unique
+            # notice ("Mirror, mirror, tell me true: attune is ${attune}")
             $attunefix = regsubst($attune,'([.]+)',"${name}-\0",'G')
             # notice ("Mirror, mirror, tell me true: attunefix is ${attunefix}")
             user_attune { $attunefix:
