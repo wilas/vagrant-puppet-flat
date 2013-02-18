@@ -1,4 +1,4 @@
-stage { "first": before => Stage["main"] }
+stage { "base": before  => Stage["main"] }
 stage { "last": require => Stage["main"] }
 
 class install_repos {
@@ -70,64 +70,41 @@ class install_repos {
     }
 }
 
+
 class basic_package {
 
-    package { [ "wget",
-                "mc",
-                "vim-common",
-                "git",
-                "rubygems"
-        ]:
+    $basic_pkg = hiera_array('basic_package')
+    package { $basic_pkg:
         ensure => installed,
     }
 
-    # help create box package
-    package { [ "make",
-                 "gcc",
-                 "kernel-devel",
-                 "curl",
-                 "bzip2"
-        ]:
-        ensure => installed,
-    }
-
-    # https://github.com/rodjek/puppet-lint
-    # puppet-lint <path to file>
-    # or you can add: require 'puppet-lint/tasks/puppet-lint' to your Rakefile
-    # and then run: rake lint
-    package { "puppet-lint":
-        ensure   => installed,
-        provider => "gem",
-        require  => Package["rubygems"],
-    }
-
-
-}
-
-class user::root {
-    
-    define root_attune { 
-        file { $name:
-            ensure  => present,
-            source  => "/vagrant/files${name}",
-            owner   => "root",
-            group   => "root",
-            recurse => true,
+    $basic_erase_pkg = hiera_array('basic_erase_package', undef)
+    if $basic_erase_pkg {
+        package { $basic_erase_pkg:
+            ensure => absent,
         }
     }
 
-    ssh_authorized_key { "root_key":
-        key    => "AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==",
-        type   => "ssh-rsa",
-        user   => "root",
+    # package from vagrant box creation
+    $vagrant_pkg = hiera_array('vagrant_box_package', undef)
+    if $vagrant_pkg {
+        package { $vagrant_pkg:
+            ensure => installed,
+        }
     }
 
-    root_attune { [ "/root/.vimrc", "/root/.bashrc", "/root/.vim" ]: }
+    # gem package
+    $gem_pkg = hiera_array('gem_package', undef)
+    if $gem_pkg {
+        package { $gem_pkg:
+            ensure   => installed,
+            provider => "gem",
+            require  => Package["rubygems"],
+        }
+    }
 }
 
-
-# Class manage virtual users (plain_user and ssh_user)
-class user::virtual {
+class user {
 
     define user_attune( $username, $meta_attune="user" ){
         
@@ -149,7 +126,6 @@ class user::virtual {
         # Absent not delete user home_dir: http://projects.puppetlabs.com/issues/9294
         user { $name:
             ensure     => $ensure,
-            # password => '',
             home       => "/home/${name}",
             managehome => true,
             uid        => $uid,
@@ -163,7 +139,7 @@ class user::virtual {
 
         # Users are able to change their own passwords and puppet doesn't overwrite changes
         if $ensure == "present" {
-            exec { "/vagrant/files/tools/setpassword.sh $name":
+            exec { "/vagrant/tools/setpassword.sh $name":
                 path    => "/bin:/usr/bin",
                 require => User[$name],
                 unless  => "grep $name /etc/shadow | cut -f 2 -d : | grep -v '!'",
@@ -201,27 +177,52 @@ class user::virtual {
             }
         }
     }
+}
 
-    @ssh_user { "elk": 
+class user::root {
+    
+    define root_attune { 
+        file { $name:
+            ensure  => present,
+            source  => "/vagrant/files${name}",
+            owner   => "root",
+            group   => "root",
+            recurse => true,
+        }
+    }
+
+    ssh_authorized_key { "root_key":
+        key    => "AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==",
+        type   => "ssh-rsa",
+        user   => "root",
+    }
+
+    root_attune { [ "/root/.vimrc", "/root/.bashrc", "/root/.vim", "/root/.tmux.conf", ]: }
+}
+
+# Class manage virtual users (plain_user and ssh_user)
+class user::virtual {
+
+    @user::ssh_user { "elk": 
         uid    => "505",
         key    => "AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==",
         attune => [".bashrc", ".vimrc", ".vim"],
     }
 
-    @ssh_user { "yak": 
+    @user::ssh_user { "yak": 
         uid    => "506",
         key    => "AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==",
         ensure => absent,
     }
 
-    @ssh_user { "emu":
+    @user::ssh_user { "emu":
         uid         => "507",
         key         => "AAAAB3NzaC1yc2EAAAABIwAAAQEA30Z4O2kddLLTuhZPT/WlJ29qZ5stFcGG0srP4Ga/GuRtJdXdQBRMchtoK4Jm7HWRSJhaX65QZQDitByko9Hcetq5tdL/VV+gXe2yBhN1wsTCPpefx2fOPkJdv+izCoAdEmSYUlRo9KuuJwsZxPk1eTkf89o0zkukVDwvGN0M16IeJx9x2y/V+JUSAGCMzEG8Vjjw2VQqKrhg12nLnub4vOzaZxi+QAQJEzcI/TyrB/Jtyl3nZ+gFXlJWoWhmwgSK691CqqR1FZ+QyxMIHxS47Q5/vjO7k8Z34K1L95piwtFGRKU6f64dDidzfbAvqdUQCdC6QMZ4A+eqet98XxmXjQ==",
         attune      => [".bashrc"],
         meta_attune => "emu",
     }
 
-    @plain_user { "puffin":
+    @user::plain_user { "puffin":
         uid     => "508",
         attune  => [".bashrc", ".vimrc", ".vim"],
         ensure => absent,
@@ -231,23 +232,34 @@ class user::virtual {
 class user::horde_air {
     search User::Virtual
 
-    realize( Ssh_user["emu"],
-             Plain_user["puffin"] )
-
+    $air_ssh_usr = hiera_array('air_ssh_users', undef)
+    if $air_ssh_usr {
+        realize(Ssh_user[$air_ssh_usr])
+    }
+    $air_plain_usr = hiera_array('air_plain_users', undef)
+    if $air_plain_usr {
+        realize(Plain_user[$air_plain_usr])
+    }
 }
 
 class user::horde_earth {
     search User::Virtual
 
-    realize( Ssh_user["emu"], 
-             Ssh_user["elk"],
-             Ssh_user["yak"])
+    $earth_ssh_usr = hiera_array('earth_ssh_users', undef)
+    if $earth_ssh_usr {
+        realize(Ssh_user[$earth_ssh_usr])
+    }
+    $earth_plain_usr = hiera_array('earth_plain_users', undef)
+    if $earth_plain_usr {
+        realize(Plain_user[$earth_plain_usr])
+    }
 }
 
 # Declare class
-class { "install_repos": stage  => "first" }
-class { "basic_package": }
-class { "user::root": stage => "last"}
+class { "install_repos": stage => "base" }
+class { "basic_package": stage => "base" }
+class { "user::root": stage    => "base" }
+Class["install_repos"] -> Class["basic_package"] -> Class["user::root"]
 
 class { "user::virtual": }
 class { "user::horde_air": }

@@ -3,7 +3,7 @@
 ## VM description
 
  - OS: Scientific linux 6
- - simple vm: farmhouse_flat.farm
+ - simple vm: pie.farm
 
 ## Learned lessons
 
@@ -23,6 +23,8 @@
 ```
     vagrant up
     ssh root@localhost -p 2222
+    ssh emu@localhost -p 2222
+    ssh elk@localhost -p 2222
     vagrant destroy
 ```
 
