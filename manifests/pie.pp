@@ -1,12 +1,16 @@
 stage { "base": before  => Stage["main"] }
 stage { "last": require => Stage["main"] }
 
-class install_repos {
-    include install_repos::epel
-    include install_repos::puppetlabs
+class yum_repos {
+    if hiera('adm_epel_repos', undef){
+        include yum_repos::epel
+    }
+    if hiera('adm_puppetlabs_repos', undef){
+        include yum_repos::puppetlabs
+    }
 }
 
-class install_repos::epel {
+class yum_repos::epel {
 
     file { "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6":
         ensure => file,
@@ -57,7 +61,7 @@ class install_repos::epel {
     }
 }
 
-class install_repos::puppetlabs {
+class yum_repos::puppetlabs {
 
     file { "/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs":
         ensure => file,
@@ -277,10 +281,10 @@ class user::horde_earth {
 }
 
 # Declare class
-class { "install_repos": stage => "base" }
+class { "yum_repos": stage     => "base" }
 class { "basic_package": stage => "base" }
 class { "user::root": stage    => "base" }
-Class["install_repos"] -> Class["basic_package"] -> Class["user::root"]
+Class["yum_repos"] -> Class["basic_package"] -> Class["user::root"]
 
 class { "user::virtual": }
 class { "user::horde_air": }
