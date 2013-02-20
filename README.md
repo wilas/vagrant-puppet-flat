@@ -14,6 +14,7 @@
  - install some packages
  - manage users (virtual resources)
  - manage ssh key authentication
+ - use hiera
 
 ## Howto
 
