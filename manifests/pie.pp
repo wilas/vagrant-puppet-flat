@@ -52,7 +52,7 @@ class yum_repos::epel {
             mirrorlist => 'https://mirrors.fedoraproject.org/metalink?repo=testing-source-epel6&arch=$basearch',
             tag        => 'epel';
     }
-    
+
     Yumrepo <| tag == 'epel' |> { 
         failovermethod => 'priority',
         gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6',
@@ -88,7 +88,7 @@ class yum_repos::puppetlabs {
             baseurl  => 'http://yum.puppetlabs.com/el/6/devel/$basearch',
             tag      => 'puppet';
     }
-    
+
     Yumrepo <| tag == 'puppet' |> { 
         gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs',
         gpgcheck       => 1,
@@ -132,12 +132,12 @@ class basic_package {
 class user {
 
     define user_attune( $username, $meta_attune="user" ){
-        
+
         # Resource's name/title in puppet must be unique, so filename is hidden in resource name.
         # (e.g: users: emu and elk want define own .bashrc, resource name can't be .bashrc, but can be emu-.bashrc and elk-.bashrc)
         $filename = split($name,"${username}-")
         # notice ("Mirror, mirror, tell me true: filename is ${filename}")
-        
+
         file { "/home/${username}/${filename}":
             source  => "/vagrant/files/user/${meta_attune}-${filename}",
             owner   => $username,
@@ -147,7 +147,7 @@ class user {
     }
 
     define plain_user ( $uid, $ensure = "present", $attune = false, $meta_attune="user" ){
-    
+
         # Absent not delete user home_dir: http://projects.puppetlabs.com/issues/9294
         user { $name:
             ensure     => $ensure,
@@ -155,7 +155,7 @@ class user {
             managehome => true,
             uid        => $uid,
         }
-      
+
         group { $name:
             ensure  => $ensure,
             gid     => $uid,
@@ -193,7 +193,7 @@ class user {
             attune      => $attune,
             meta_attune => $meta_attune,
         }
-        
+
         if $ensure == "present" {
             ssh_authorized_key { "${name}_key":
                 key    => $key,
@@ -205,7 +205,7 @@ class user {
 }
 
 class user::root {
-    
+
     define root_attune { 
         file { $name:
             ensure  => present,

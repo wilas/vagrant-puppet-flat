@@ -18,7 +18,7 @@
 
 ## Howto
 
- - create SL6 using [veewee-boxarium](https://github.com/wilas/veewee-boxarium)
+ - create SL6 box using [veewee-boxarium](https://github.com/wilas/veewee-boxarium)
  - copy ssh_keys from [ssh-gerwazy](https://github.com/wilas/ssh-gerwazy)
 
 ```
@@ -43,10 +43,13 @@
  - puppet open-source: http://puppetlabs.com/puppet/puppet-open-source/
  - puppet forge: http://forge.puppetlabs.com/
  - puppet hiera: http://docs.puppetlabs.com/hiera/1/index.html
+ - puppet lang. scope: http://docs.puppetlabs.com/puppet/3/reference/lang_scope.html
  - puppet using hiera: https://puppetlabs.com/blog/first-look-installing-and-using-hiera/
  - puppet3: http://docs.puppetlabs.com/puppet/3/reference/index.html
  - !!! puppet cookbook: http://puppetcookbook.com/
  - !! more links: http://blog.andreas-haerter.com/2012/02/05/how-to-start-puppet-system-config-links-resources-tutorials
+ - good practice (#PUPPETHEADER): http://www.slideshare.net/PuppetLabs/creating-a-mature-puppet-system-16815622
+ - what not to do: http://www.slideshare.net/PuppetLabs/whatnottodo
  - community: http://docs.puppetlabs.com/community/community_guidelines.html
 
 ### Puppet IDE

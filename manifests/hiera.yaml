@@ -3,6 +3,7 @@
     - %{::osfamily}-pkgs
     - %{::osfamily}-repos
     - common
+    - users
 :backends:
     - yaml
 :yaml:
