@@ -1,5 +1,5 @@
-stage { "base": before  => Stage["main"] }
-stage { "last": require => Stage["main"] }
+stage { 'base': before  => Stage['main'] }
+stage { 'last': require => Stage['main'] }
 
 class yum_repos {
     if hiera('adm_epel_repos', undef){
@@ -12,87 +12,87 @@ class yum_repos {
 
 class yum_repos::epel {
 
-    file { "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6":
+    file { '/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6':
         ensure => file,
-        owner  => "root",
-        group  => "root",
-        mode   => "0444",
-        source => "/vagrant/files/RPM-GPG-KEY-EPEL-6",
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0444',
+        source => '/vagrant/files/RPM-GPG-KEY-EPEL-6',
     }
 
-    yumrepo { 
-        "epel":
+    yumrepo {
+        'epel':
             enabled    => hiera('enabled_epel',0),
             descr      => 'Extra Packages for Enterprise Linux 6 - $basearch',
             mirrorlist => 'https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch',
             tag        => 'epel';
-        "epel-debuginfo":
+        'epel-debuginfo':
             enabled    => hiera('enabled_epel_debuginfo',0),
             descr      => 'Extra Packages for Enterprise Linux 6 - $basearch - Debug',
             mirrorlist => 'https://mirrors.fedoraproject.org/metalink?repo=epel-debug-6&arch=$basearch',
             tag        => 'epel';
-        "epel-source":
+        'epel-source':
             enabled    => hiera('enabled_epel_source',0),
             descr      => 'Extra Packages for Enterprise Linux 6 - $basearch - Source',
             mirrorlist => 'https://mirrors.fedoraproject.org/metalink?repo=epel-source-6&arch=$basearch',
             tag        => 'epel';
-        "epel-testing":
+        'epel-testing':
             enabled    => hiera('enabled_epel_testing',0),
             descr      => 'Extra Packages for Enterprise Linux 6 - Testing - $basearch',
             mirrorlist => 'https://mirrors.fedoraproject.org/metalink?repo=testing-epel6&arch=$basearch',
             tag        => 'epel';
-        "epel-testing-debuginfo":
+        'epel-testing-debuginfo':
             enabled    => hiera('enabled_epel_testing_debuginfo',0),
             descr      => 'Extra Packages for Enterprise Linux 6 - Testing - $basearch - Debug',
             mirrorlist => 'https://mirrors.fedoraproject.org/metalink?repo=testing-debug-epel6&arch=$basearch',
             tag        => 'epel';
-        "epel-testing-source":
+        'epel-testing-source':
             enabled    => hiera('enabled_epel_testing_source',0),
             descr      => 'Extra Packages for Enterprise Linux 6 - Testing - $basearch - Source',
             mirrorlist => 'https://mirrors.fedoraproject.org/metalink?repo=testing-source-epel6&arch=$basearch',
             tag        => 'epel';
     }
 
-    Yumrepo <| tag == 'epel' |> { 
+    Yumrepo <| tag == 'epel' |> {
         failovermethod => 'priority',
         gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6',
         gpgcheck       => 1,
-        require        => File["/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6"],
+        require        => File['/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6'],
     }
 }
 
 class yum_repos::puppetlabs {
 
-    file { "/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs":
+    file { '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs':
         ensure => file,
-        owner  => "root",
-        group  => "root",
-        mode   => "0444",
-        source => "/vagrant/files/RPM-GPG-KEY-puppetlabs",
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0444',
+        source => '/vagrant/files/RPM-GPG-KEY-puppetlabs',
     }
 
-    yumrepo { 
-        "puppetlabs-products":
+    yumrepo {
+        'puppetlabs-products':
             enabled  => hiera('enabled_puppetlabs_products',0),
             descr    => 'Puppet Labs Products EL 6 - $basearch',
             baseurl  => 'http://yum.puppetlabs.com/el/6/products/$basearch',
             tag      => 'puppet';
-        "puppetlabs-deps":
+        'puppetlabs-deps':
             enabled  => hiera('enabled_puppetlabs_deps',0),
             descr    => 'Puppet Labs Dependencies EL 6 - $basearch',
             baseurl  => 'http://yum.puppetlabs.com/el/6/dependencies/$basearch',
             tag      => 'puppet';
-        "puppetlabs-devel":
+        'puppetlabs-devel':
             enabled  => hiera('enabled_puppetlabs_devel',0),
             descr    => 'Puppet Labs Devel EL 6 - $basearch',
             baseurl  => 'http://yum.puppetlabs.com/el/6/devel/$basearch',
             tag      => 'puppet';
     }
 
-    Yumrepo <| tag == 'puppet' |> { 
+    Yumrepo <| tag == 'puppet' |> {
         gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs',
         gpgcheck       => 1,
-        require        => File["/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs"],
+        require        => File['/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs'],
     }
 }
 
@@ -123,15 +123,15 @@ class basic_package {
     if $gem_pkg {
         package { $gem_pkg:
             ensure   => installed,
-            provider => "gem",
-            require  => Package["rubygems"],
+            provider => 'gem',
+            require  => Package['rubygems'],
         }
     }
 }
 
 class user {
 
-    define user_attune( $username, $meta_attune="user" ){
+    define user_attune( $username, $meta_attune='user' ){
 
         # Resource's name/title in puppet must be unique, so filename is hidden in resource name.
         # (e.g: users: emu and elk want define own .bashrc, resource name can't be .bashrc, but can be emu-.bashrc and elk-.bashrc)
@@ -146,7 +146,7 @@ class user {
         }
     }
 
-    define plain_user ( $uid, $ensure = "present", $attune = false, $meta_attune="user" ){
+    define plain_user ( $uid, $ensure = 'present', $attune = false, $meta_attune='user' ){
 
         # Absent not delete user home_dir: http://projects.puppetlabs.com/issues/9294
         user { $name:
@@ -163,15 +163,15 @@ class user {
         }
 
         # Users are able to change their own passwords and puppet doesn't overwrite changes
-        if $ensure == "present" {
-            exec { "/vagrant/tools/setpassword.sh $name":
-                path    => "/bin:/usr/bin",
+        if $ensure == 'present' {
+            exec { "/vagrant/tools/setpassword.sh ${name}":
+                path    => '/bin:/usr/bin',
                 require => User[$name],
-                unless  => "grep $name /etc/shadow | cut -f 2 -d : | grep -v '!'",
+                unless  => "grep ${name} /etc/shadow | cut -f 2 -d : | grep -v '!'",
             }
         }
 
-        if $ensure == "present" and $attune {
+        if $ensure == 'present' and $attune {
             # make $name of user_attune unique
             # notice ("Mirror, mirror, tell me true: attune is ${attune}")
             $attunefix = regsubst($attune,'([.]+)',"${name}-\0",'G')
@@ -185,19 +185,19 @@ class user {
 
     }
 
-    define ssh_user ($uid, $key, $ensure = "present", $attune = false, $meta_attune="user"){
+    define ssh_user ($uid, $key, $ensure = 'present', $attune = false, $meta_attune='user'){
 
         plain_user { $name:
-            uid         => $uid,
             ensure      => $ensure,
+            uid         => $uid,
             attune      => $attune,
             meta_attune => $meta_attune,
         }
 
-        if $ensure == "present" {
+        if $ensure == 'present' {
             ssh_authorized_key { "${name}_key":
                 key    => $key,
-                type   => "ssh-rsa",
+                type   => 'ssh-rsa',
                 user   => $name,
             }
         }
@@ -206,51 +206,51 @@ class user {
 
 class user::root {
 
-    define root_attune { 
+    define root_attune {
         file { $name:
             ensure  => present,
             source  => "/vagrant/files${name}",
-            owner   => "root",
-            group   => "root",
+            owner   => 'root',
+            group   => 'root',
             recurse => true,
         }
     }
 
-    ssh_authorized_key { "root_key":
-        key    => "AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==",
-        type   => "ssh-rsa",
-        user   => "root",
+    ssh_authorized_key { 'root_key':
+        key    => 'AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==',
+        type   => 'ssh-rsa',
+        user   => 'root',
     }
 
-    root_attune { [ "/root/.vimrc", "/root/.bashrc", "/root/.vim", "/root/.tmux.conf", ]: }
+    root_attune { [ '/root/.vimrc', '/root/.bashrc', '/root/.vim', '/root/.tmux.conf', ]: }
 }
 
 # Class manage virtual users (plain_user and ssh_user)
 class user::virtual {
 
-    @user::ssh_user { "elk": 
-        uid    => "505",
-        key    => "AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==",
-        attune => [".bashrc", ".vimrc", ".vim"],
+    @user::ssh_user { 'elk':
+        uid    => '505',
+        key    => 'AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==',
+        attune => ['.bashrc', '.vimrc', '.vim'],
     }
 
-    @user::ssh_user { "yak": 
-        uid    => "506",
-        key    => "AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==",
+    @user::ssh_user { 'yak':
         ensure => absent,
+        uid    => '506',
+        key    => 'AAAAB3NzaC1yc2EAAAABIwAAAQEAzklfofBRMF0doSKawOD0NQaq2z5VJUnsE3KNvEOln+l2BwHM2k2IdEXIfgR+BGUy+wz2wbDSiHVSEoqxX9tfnZSYxdI3IH8goNkkjdKy16r/cm/QEn5sSXgu0RowegTIKplFYU1CWNPlCViGXoUVatwEC2Byo9tz7/kMebQetAoeEMkRH0t/3pkgWqNHy8PDYUASp8PUnKUFcWhUyEokzfPxFllDBjdcMKpx6Iwk/iX/3LNmkXZvSQ6fbNj4a4oCKyx8BJBosUX/bopa0rhCZ6NGP0FHZsLZ9STO8fM5O921kMn7cDxe1MQwDTzvTl9ZJIfCzgZoySqHQ82JzR4nSQ==',
     }
 
-    @user::ssh_user { "emu":
-        uid         => "507",
-        key         => "AAAAB3NzaC1yc2EAAAABIwAAAQEA30Z4O2kddLLTuhZPT/WlJ29qZ5stFcGG0srP4Ga/GuRtJdXdQBRMchtoK4Jm7HWRSJhaX65QZQDitByko9Hcetq5tdL/VV+gXe2yBhN1wsTCPpefx2fOPkJdv+izCoAdEmSYUlRo9KuuJwsZxPk1eTkf89o0zkukVDwvGN0M16IeJx9x2y/V+JUSAGCMzEG8Vjjw2VQqKrhg12nLnub4vOzaZxi+QAQJEzcI/TyrB/Jtyl3nZ+gFXlJWoWhmwgSK691CqqR1FZ+QyxMIHxS47Q5/vjO7k8Z34K1L95piwtFGRKU6f64dDidzfbAvqdUQCdC6QMZ4A+eqet98XxmXjQ==",
-        attune      => [".bashrc"],
-        meta_attune => "emu",
+    @user::ssh_user { 'emu':
+        uid         => '507',
+        key         => 'AAAAB3NzaC1yc2EAAAABIwAAAQEA30Z4O2kddLLTuhZPT/WlJ29qZ5stFcGG0srP4Ga/GuRtJdXdQBRMchtoK4Jm7HWRSJhaX65QZQDitByko9Hcetq5tdL/VV+gXe2yBhN1wsTCPpefx2fOPkJdv+izCoAdEmSYUlRo9KuuJwsZxPk1eTkf89o0zkukVDwvGN0M16IeJx9x2y/V+JUSAGCMzEG8Vjjw2VQqKrhg12nLnub4vOzaZxi+QAQJEzcI/TyrB/Jtyl3nZ+gFXlJWoWhmwgSK691CqqR1FZ+QyxMIHxS47Q5/vjO7k8Z34K1L95piwtFGRKU6f64dDidzfbAvqdUQCdC6QMZ4A+eqet98XxmXjQ==',
+        attune      => ['.bashrc'],
+        meta_attune => 'emu',
     }
 
-    @user::plain_user { "puffin":
-        uid     => "508",
-        attune  => [".bashrc", ".vimrc", ".vim"],
+    @user::plain_user { 'puffin':
         ensure => absent,
+        uid    => '508',
+        attune => ['.bashrc', '.vimrc', '.vim'],
     }
 }
 
@@ -280,18 +280,18 @@ class user::horde_earth {
     }
 }
 
+# MAIN
 # Declare class
-class { "yum_repos": stage     => "base" }
-class { "basic_package": stage => "base" }
-class { "user::root": stage    => "base" }
-Class["yum_repos"] -> Class["basic_package"] -> Class["user::root"]
+class { 'yum_repos': stage     => 'base' }
+class { 'basic_package': stage => 'base' }
+class { 'user::root': stage    => 'base' }
+Class['yum_repos'] -> Class['basic_package'] -> Class['user::root']
 
-class { "user::virtual": }
-class { "user::horde_air": }
-class { "user::horde_earth": }
+class { 'user::virtual': }
+class { 'user::horde_air': }
+class { 'user::horde_earth': }
 
-file { "/tmp/simple.txt":
-    ensure => present,
-    content => "Test me ...\n",
+file { '/tmp/simple.txt':
+    ensure  => present,
+    content => 'Test me ...\n',
 }
-
