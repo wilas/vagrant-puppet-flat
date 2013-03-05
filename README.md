@@ -1,4 +1,6 @@
-# Single file puppet manifest and vagrant
+# Description
+
+Single file puppet manifest. Modular version: [vagrant-puppet-modules](https://github.com/wilas/vagrant-puppet-modules)
 
 ## VM description
 
@@ -7,7 +9,7 @@
 
 ## Learned lessons
 
- - prepare own vagrant box: scientific linux 6 x86_64 (now [veewee-SL6-box](https://github.com/wilas/veewee-vagrant-SL6-x86_64))
+ - prepare own vagrant box: scientific linux 6 x86_64 (now [veewee-boxarium](https://github.com/wilas/veewee-boxarium))
  - simple Vagrantfile with puppet provisioning, share folder
  - use stage in puppet manifest
  - manage yum repos (tags, resource collecions )
@@ -35,6 +37,7 @@
 ### Puppet
 
  - !!! learning puppet: http://docs.puppetlabs.com/learning/index.html
+ - !!! puppet cookbook: http://puppetcookbook.com/
  - !!! puppet resource type: http://docs.puppetlabs.com/references/3.1.latest/type.html
  - puppet styl guide: http://docs.puppetlabs.com/guides/style_guide.html
  - puppet language guide: http://docs.puppetlabs.com/puppet/3/reference/lang_summary.html
@@ -42,15 +45,17 @@
  - puppet best practice: http://projects.puppetlabs.com/projects/puppet/wiki/Puppet_Best_Practice2
  - puppet open-source: http://puppetlabs.com/puppet/puppet-open-source/
  - puppet forge: http://forge.puppetlabs.com/
- - puppet hiera: http://docs.puppetlabs.com/hiera/1/index.html
  - puppet lang. scope: http://docs.puppetlabs.com/puppet/3/reference/lang_scope.html
- - puppet using hiera: https://puppetlabs.com/blog/first-look-installing-and-using-hiera/
+ - puppet hiera: http://docs.puppetlabs.com/hiera/1/index.html
+ - puppet hiera: https://puppetlabs.com/blog/first-look-installing-and-using-hiera/
  - puppet3: http://docs.puppetlabs.com/puppet/3/reference/index.html
- - !!! puppet cookbook: http://puppetcookbook.com/
- - !! more links: http://blog.andreas-haerter.com/2012/02/05/how-to-start-puppet-system-config-links-resources-tutorials
  - good practice (#PUPPETHEADER): http://www.slideshare.net/PuppetLabs/creating-a-mature-puppet-system-16815622
  - what not to do: http://www.slideshare.net/PuppetLabs/whatnottodo
  - community: http://docs.puppetlabs.com/community/community_guidelines.html
+ - use puppet modules: https://github.com/wilas/vagrant-puppet-modules
+ - use puppet hiera: https://github.com/wilas/vagrant-puppet-hiera
+ - !! more links: http://blog.andreas-haerter.com/2012/02/05/how-to-start-puppet-system-config-links-resources-tutorials
+
 
 ### Puppet IDE
 
